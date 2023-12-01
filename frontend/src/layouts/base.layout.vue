@@ -14,6 +14,7 @@ import type {ToolCategory} from '@/tools/tools.types';
 import {useToolStore} from '@/tools/tools.store';
 import {useTracker} from '@/modules/tracker/tracker.services';
 import CollapsibleToolMenu from '@/components/CollapsibleToolMenu.vue';
+import CInputText from "@/ui/c-input-text/c-input-text.vue";
 
 const themeVars = useThemeVars();
 const styleStore = useStyleStore();
@@ -90,55 +91,61 @@ const tools = computed<ToolCategory[]>(() => [
     </template>
 
     <template #content>
-      <div flex items-center justify-center gap-2>
-        <c-button
-            circle
-            variant="text"
-            :aria-label="$t('home.toggleMenu')"
-            @click="styleStore.isMenuCollapsed = !styleStore.isMenuCollapsed"
-        >
-          <NIcon size="25" :component="Menu2"/>
-        </c-button>
-
-        <c-tooltip :tooltip="$t('home.home')" position="bottom">
-          <c-button to="/" circle variant="text" :aria-label="$t('home.home')">
-            <NIcon size="25" :component="Home2"/>
-          </c-button>
-        </c-tooltip>
-
-        <c-tooltip :tooltip="$t('home.uiLib')" position="bottom">
+      <div flex items-center justify-between gap-2>
+        <div>
           <c-button
-              v-if="config.app.env === 'development'"
-              to="/c-lib"
               circle
               variant="text"
-              :aria-label="$t('home.uiLib')"
+              :aria-label="$t('home.toggleMenu')"
+              @click="styleStore.isMenuCollapsed = !styleStore.isMenuCollapsed"
           >
-            <icon-mdi:brush-variant text-20px/>
+            <NIcon size="25" :component="Menu2"/>
           </c-button>
-        </c-tooltip>
 
+          <c-tooltip :tooltip="$t('home.home')" position="bottom">
+            <c-button to="/" circle variant="text" :aria-label="$t('home.home')">
+              <NIcon size="25" :component="Home2"/>
+            </c-button>
+          </c-tooltip>
+
+          <!--#v-ifdef env.MODE==='development' -->
+          <c-tooltip :tooltip="$t('home.uiLib')" position="bottom">
+            <c-button
+                to="/c-lib"
+                circle
+                variant="text"
+                :aria-label="$t('home.uiLib')"
+            >
+              <icon-mdi:brush-variant text-20px/>
+            </c-button>
+          </c-tooltip>
+          <!--#v-endif-->
+
+        </div>
+        <!--#v-ifdef env.VITE_IS_DESKTOP -->
         <command-palette/>
+        <!--#v-endif-->
 
-        <locale-selector v-if="!styleStore.isSmallScreen"/>
-
-        <div>
+        <div flex gap-12px>
+          <locale-selector v-if="!styleStore.isSmallScreen"/>
           <NavbarButtons v-if="!styleStore.isSmallScreen"/>
+
+          <c-tooltip position="bottom" :tooltip="$t('home.support')">
+            <c-button
+                round
+                href="https://www.buymeacoffee.com/couriouc"
+                rel="noopener"
+                target="_blank"
+                class="support-button"
+                :bordered="false"
+            >
+              {{ $t('home.buyMeACoffee') }}
+              <NIcon v-if="!styleStore.isSmallScreen" :component="Heart" ml-2/>
+            </c-button>
+          </c-tooltip>
+
         </div>
 
-        <c-tooltip position="bottom" :tooltip="$t('home.support')">
-          <c-button
-              round
-              href="https://www.buymeacoffee.com/couriouc"
-              rel="noopener"
-              target="_blank"
-              class="support-button"
-              :bordered="false"
-          >
-            {{ $t('home.buyMeACoffee') }}
-            <NIcon v-if="!styleStore.isSmallScreen" :component="Heart" ml-2/>
-          </c-button>
-        </c-tooltip>
       </div>
       <slot/>
     </template>
