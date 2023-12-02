@@ -1,6 +1,7 @@
-package app
+package backend
 
 import (
+	"changeme/backend/api/service"
 	"context"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
@@ -16,6 +17,7 @@ type App struct {
 	log        *logrus.Logger
 	killSignal chan struct{}
 
+	server  *service.BackgroundServer
 	Network struct {
 		URL     string
 		Handles struct {
@@ -69,7 +71,9 @@ func NewApp() *App {
 
 func (app *App) WailsShutdown() {
 	close(app.killSignal)
+
 	app.DB.Close()
+	app.server.Close()
 }
 
 func initDirectoryStructure(app *App) error {
@@ -118,5 +122,11 @@ func (app *App) Startup(ctx context.Context) {
 	if err != nil {
 		app.log.Errorln("Unable to set up directory structure. Reason: ", err)
 	}
+	initBackgroundServer(app)
 	initLogger(app)
+}
+
+func initBackgroundServer(app *App) {
+	app.server = service.NewBackgroundServer()
+	app.server.Startup()
 }

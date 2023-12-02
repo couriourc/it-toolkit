@@ -1,7 +1,8 @@
 import {tool as base64FileConverter} from './base64-file-converter';
 import {tool as base64StringConverter} from './base64-string-converter';
 import {tool as basicAuthGenerator} from './basic-auth-generator';
-import {tool as reqrcodeParser} from './reqrcode-parser';
+import {tool as rssSubscribor} from './rss-subscribor';
+import {tool as reQrcodeParser} from './reqrcode-parser';
 import {tool as pdfSignatureChecker} from './pdf-signature-checker';
 import {tool as numeronymGenerator} from './numeronym-generator';
 import {tool as macAddressGenerator} from './mac-address-generator';
@@ -76,7 +77,6 @@ import {tool as urlParser} from './url-parser';
 import {tool as uuidGenerator} from './uuid-generator';
 import {tool as macAddressLookup} from './mac-address-lookup';
 import {tool as xmlFormatter} from './xml-formatter';
-import {tool as reQrcodeParser} from './reqrcode-parser';
 
 export const toolsByCategory: ToolCategory[] = [
     {
@@ -147,6 +147,7 @@ export const toolsByCategory: ToolCategory[] = [
             chmodCalculator,
             dockerRunToDockerComposeConverter,
             xmlFormatter,
+            rssSubscribor
         ],
     },
     {

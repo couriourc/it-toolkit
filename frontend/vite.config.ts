@@ -1,4 +1,4 @@
-import {URL, fileURLToPath} from 'node:url';
+import {fileURLToPath, URL} from 'node:url';
 import {resolve} from 'node:path';
 
 import {defineConfig} from 'vite';
@@ -15,7 +15,6 @@ import {configDefaults} from 'vitest/config';
 import Icons from 'unplugin-icons/vite';
 import IconsResolver from 'unplugin-icons/resolver';
 import VueI18n from '@intlify/unplugin-vue-i18n/vite';
-import {IfDefine} from './vite-plugins/if-define';
 
 const baseUrl = process.env.BASE_URL ?? '/';
 
@@ -94,7 +93,7 @@ export default defineConfig({
             resolvers: [NaiveUiResolver(), IconsResolver({prefix: 'icon'})],
         }),
         Unocss(),
-        IfDefine(),
+        // IfDefine(),
     ],
     base: baseUrl,
     resolve: {

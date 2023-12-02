@@ -28,9 +28,10 @@ func cors() gin.HandlerFunc {
 	}
 }
 
+var r = gin.Default()
+
 // 如果是网页服务
 func (server *BackgroundServer) Startup() {
-	r := gin.Default()
 	r.Use(cors())
 	r.GET("/rss_parser", func(context *gin.Context) {
 		url := context.Query("url")
@@ -45,4 +46,8 @@ func (server *BackgroundServer) Startup() {
 		return
 	})
 	r.Run().Error()
+}
+
+func (server *BackgroundServer) Close() {
+
 }
