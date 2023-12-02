@@ -1,4 +1,9 @@
 {
+	"scripts": {
+		"dev": "wails dev",
+		"build": "wails build",
+		"frontend:dev": "cd frontend && pnpm dev"
+	},
 	"devDependencies": {
 		"pnpm": "^8.11.0"
 	}
