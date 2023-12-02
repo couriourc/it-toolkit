@@ -18,6 +18,9 @@ jobs:
           node-version: 16
           cache: 'pnpm'
 
+      - name: Step to frontend
+        run: cd frontend
+
       - name: Install dependencies
         run: pnpm i
 

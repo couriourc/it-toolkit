@@ -64,6 +64,9 @@ jobs:
           node-version: 16
           cache: 'pnpm'
 
+      - name: Step to frontend
+        run: cd frontend
+
       - name: Install dependencies
         run: pnpm i
 
@@ -71,7 +74,7 @@ jobs:
         run: pnpm build
 
       - name: Zip the app
-        run: zip -r it-tools-${{ env.RELEASE_VERSION }}.zip dist/*
+        run: zip -r it-toolkit-${{ env.RELEASE_VERSION }}.zip dist/*
 
       - name: Get changelog
         id: changelog
