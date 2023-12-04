@@ -19,8 +19,9 @@
 
 <script setup lang="ts">
 import CCard from "@/ui/c-card/c-card.vue";
+import {ParserByURL} from "../../../wailsjs/go/RSSParser/RSSParser";
 
-const url = ref<string>('');
+const url = ref<string>('https://news.ycombinator.com/rss');
 const result = ref({})
 
 const logger = (res) => {
@@ -28,7 +29,14 @@ const logger = (res) => {
   return Promise.resolve(res)
 }
 
-function getRss() {
+async function getRss() {
+  // console.log(
+  //
+  // )
+  // ParserByURL(`${url.value}`)
+  //     .then(
+  //         logger
+  //     )
   fetch(`http://localhost:8080/rss_parser?url=${url.value}`)
       .then(res => res.json())
       .then(logger)

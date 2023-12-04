@@ -5,6 +5,7 @@ import (
 	"context"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
+	viper "github.com/spf13/viper"
 	"io"
 	"os"
 	user "os/user"
@@ -18,6 +19,7 @@ type App struct {
 	killSignal chan struct{}
 
 	server  *service.BackgroundServer
+	config  struct{}
 	Network struct {
 		URL     string
 		Handles struct {
@@ -93,10 +95,14 @@ func initDirectoryStructure(app *App) error {
 	app.log.Info("DAG Directory: ", app.paths.DAGDir)
 
 	err = DirectoryCreator(app.paths.DAGDir, app.paths.TMPDir)
-
 	return err
 }
 
+func initConfigurationLoader(app *App) {
+	viper.SetConfigName("config")
+	viper.SetConfigType("json")
+	viper.AddConfigPath(app.paths.DAGDir)
+}
 func initLogger(app *App) {
 	logFile, err := os.OpenFile(app.paths.LOGFILE,
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
@@ -122,6 +128,7 @@ func (app *App) Startup(ctx context.Context) {
 	if err != nil {
 		app.log.Errorln("Unable to set up directory structure. Reason: ", err)
 	}
+	initConfigurationLoader(app)
 	initBackgroundServer(app)
 	initLogger(app)
 }
@@ -129,4 +136,5 @@ func (app *App) Startup(ctx context.Context) {
 func initBackgroundServer(app *App) {
 	app.server = service.NewBackgroundServer()
 	app.server.Startup()
+
 }
