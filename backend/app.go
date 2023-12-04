@@ -5,7 +5,6 @@ import (
 	"context"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
-	viper "github.com/spf13/viper"
 	"io"
 	"os"
 	user "os/user"
@@ -15,7 +14,7 @@ import (
 type App struct {
 	ctx        context.Context
 	DB         *gorm.DB
-	log        *logrus.Logger
+	Log        *logrus.Logger
 	killSignal chan struct{}
 
 	server  *service.BackgroundServer
@@ -77,7 +76,9 @@ func (app *App) WailsShutdown() {
 	app.DB.Close()
 	app.server.Close()
 }
-
+func (app *App) GetSeverAddress() int {
+	return app.server.Port
+}
 func initDirectoryStructure(app *App) error {
 	user, err := user.Current()
 	if err != nil {
@@ -92,28 +93,23 @@ func initDirectoryStructure(app *App) error {
 	app.paths.EmptyTXFile = app.paths.TMPDir + "/genesis_tx"
 	app.paths.LOGFILE = app.paths.TMPDir + "/.log"
 	app.paths.ImageDir = "./frontend/src/assets/img/" // Image Folder
-	app.log.Info("DAG Directory: ", app.paths.DAGDir)
+	app.Log.Info("DAG Directory: ", app.paths.DAGDir)
 
 	err = DirectoryCreator(app.paths.DAGDir, app.paths.TMPDir)
 	return err
 }
 
-func initConfigurationLoader(app *App) {
-	viper.SetConfigName("config")
-	viper.SetConfigType("json")
-	viper.AddConfigPath(app.paths.DAGDir)
-}
 func initLogger(app *App) {
 	logFile, err := os.OpenFile(app.paths.LOGFILE,
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
 		0664)
 
 	if err != nil {
-		app.log.Fatal("Unable to create log file")
+		app.Log.Fatal("Unable to create log file")
 	}
 	mw := io.MultiWriter(os.Stdout, logFile)
-	app.log.SetOutput(mw)
-	app.log.SetFormatter(&logrus.TextFormatter{
+	app.Log.SetOutput(mw)
+	app.Log.SetFormatter(&logrus.TextFormatter{
 		ForceColors:   true,
 		FullTimestamp: true,
 	})
@@ -123,12 +119,12 @@ func initLogger(app *App) {
 // so we can call the runtime methods
 func (app *App) Startup(ctx context.Context) {
 	app.ctx = ctx
-	app.log = logrus.New()
+	app.Log = logrus.New()
 	err := initDirectoryStructure(app)
 	if err != nil {
-		app.log.Errorln("Unable to set up directory structure. Reason: ", err)
+		app.Log.Errorln("Unable to set up directory structure. Reason: ", err)
 	}
-	initConfigurationLoader(app)
+
 	initBackgroundServer(app)
 	initLogger(app)
 }
@@ -136,5 +132,4 @@ func (app *App) Startup(ctx context.Context) {
 func initBackgroundServer(app *App) {
 	app.server = service.NewBackgroundServer()
 	app.server.Startup()
-
 }

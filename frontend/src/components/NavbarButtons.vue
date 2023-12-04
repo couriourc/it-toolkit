@@ -11,7 +11,7 @@ const { isDarkTheme } = toRefs(styleStore);
     <c-button
       circle
       variant="text"
-      href="https://github.com/CorentinTh/it-tools"
+      href="https://github.com/couriourc/it-toolkit"
       target="_blank"
       rel="noopener noreferrer"
       :aria-label="$t('home.nav.githubRepository')"
@@ -20,18 +20,18 @@ const { isDarkTheme } = toRefs(styleStore);
     </c-button>
   </c-tooltip>
 
-  <c-tooltip :tooltip="$t('home.nav.twitter')" position="bottom">
-    <c-button
-      circle
-      variant="text"
-      href="https://twitter.com/ittoolsdottech"
-      rel="noopener"
-      target="_blank"
-      :aria-label="$t('home.nav.twitterAccount')"
-    >
-      <n-icon size="25" :component="BrandTwitter" />
-    </c-button>
-  </c-tooltip>
+<!--  <c-tooltip :tooltip="$t('home.nav.twitter')" position="bottom">-->
+<!--    <c-button-->
+<!--      circle-->
+<!--      variant="text"-->
+<!--      href="https://twitter.com/ittoolsdottech"-->
+<!--      rel="noopener"-->
+<!--      target="_blank"-->
+<!--      :aria-label="$t('home.nav.twitterAccount')"-->
+<!--    >-->
+<!--      <n-icon size="25" :component="BrandTwitter" />-->
+<!--    </c-button>-->
+<!--  </c-tooltip>-->
 
   <c-tooltip :tooltip="$t('home.nav.about')" position="bottom">
     <c-button circle variant="text" to="/about" :aria-label="$t('home.nav.aboutLabel')">

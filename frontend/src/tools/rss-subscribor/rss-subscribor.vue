@@ -19,15 +19,15 @@
 
 <script setup lang="ts">
 import CCard from "@/ui/c-card/c-card.vue";
-import {ParserByURL} from "../../../wailsjs/go/RSSParser/RSSParser";
+import {GetSeverAddress} from "../../../wailsjs/go/backend/App";
 
-const url = ref<string>('https://news.ycombinator.com/rss');
+const url = ref<string>('https://feeds.twit.tv/twit.xml');
 const result = ref({})
 
-const logger = (res) => {
-  console.log(res)
+const logger = (res: any) => {
   return Promise.resolve(res)
 }
+getRss()
 
 async function getRss() {
   // console.log(
@@ -37,7 +37,7 @@ async function getRss() {
   //     .then(
   //         logger
   //     )
-  fetch(`http://localhost:8080/rss_parser?url=${url.value}`)
+  fetch(`http://localhost:${await GetSeverAddress()}/rss_parser?url=${url.value}`)
       .then(res => res.json())
       .then(logger)
       .then(res => {

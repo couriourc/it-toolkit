@@ -2,10 +2,10 @@ package service
 
 import (
 	RSSParser "changeme/backend/api/tools/RSSParser"
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"net"
-	"net/http"
+	net "net"
+	http "net/http"
+	strconv "strconv"
 )
 
 func GetFreePort() (int, error) {
@@ -23,12 +23,17 @@ func GetFreePort() (int, error) {
 }
 
 type BackgroundServer struct {
-	engin gin.Engine
+	engin *gin.Engine
+	Port  int
 }
 
 func NewBackgroundServer() *BackgroundServer {
+
+	port, _ := GetFreePort()
+
 	return &BackgroundServer{
-		engin: *gin.Default(),
+		engin: gin.Default(),
+		Port:  port,
 	}
 }
 
@@ -49,12 +54,13 @@ func cors() gin.HandlerFunc {
 
 // 如果是网页服务
 func (server *BackgroundServer) Startup() {
-	server.engin.Use(cors())
-	server.engin.GET("/rss_parser", func(context *gin.Context) {
+	r := server.engin
+	r.Use(cors())
+	r.GET("/rss_parser", func(context *gin.Context) {
 		url := context.Query("url")
 		parser := RSSParser.NewRSSParser()
 		feed, err := parser.ParserByURL(url)
-		fmt.Println(url)
+		print(url)
 		if err != nil {
 			context.JSON(http.StatusBadRequest, err)
 			return
@@ -62,8 +68,9 @@ func (server *BackgroundServer) Startup() {
 		context.JSON(http.StatusOK, feed)
 		return
 	})
-	//_, port := GetFreePort()
-	server.engin.Run().Error()
+
+	r.Run("localhost:" + strconv.Itoa(server.Port)).Error()
+
 }
 
 func (server *BackgroundServer) Close() {
