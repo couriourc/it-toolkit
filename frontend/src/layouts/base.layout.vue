@@ -131,17 +131,17 @@ const tools = computed<ToolCategory[]>(() => [
           <NavbarButtons v-if="!styleStore.isSmallScreen"/>
 
           <c-tooltip position="bottom" :tooltip="$t('home.support')">
-            <c-button
-                round
-                href="https://www.buymeacoffee.com/couriouc"
-                rel="noopener"
-                target="_blank"
-                class="support-button"
-                :bordered="false"
-            >
-              {{ $t('home.buyMeACoffee') }}
-              <NIcon v-if="!styleStore.isSmallScreen" :component="Heart" ml-2/>
-            </c-button>
+<!--            <c-button-->
+<!--                round-->
+<!--                href="https://www.buymeacoffee.com/couriouc"-->
+<!--                rel="noopener"-->
+<!--                target="_blank"-->
+<!--                class="support-button"-->
+<!--                :bordered="false"-->
+<!--            >-->
+<!--&lt;!&ndash;              {{ $t('home.buyMeACoffee') }}&ndash;&gt;-->
+<!--              <NIcon v-if="!styleStore.isSmallScreen" :component="Heart" ml-2/>-->
+<!--            </c-button>-->
           </c-tooltip>
 
         </div>
