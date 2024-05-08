@@ -1,11 +1,14 @@
 <script lang="ts" setup>
+import CommandPalette from '@/modules/command-palette/command-palette.vue';
+import LocaleSelector from '@/modules/i18n/components/locale-selector.vue';
+import CButton from '@/ui/c-button/c-button.vue';
+import CTooltip from '@/ui/c-tooltip/c-tooltip.vue';
 import {NIcon, useThemeVars} from 'naive-ui';
 
 import {RouterLink} from 'vue-router';
 import {Heart, Home2, Menu2} from '@vicons/tabler';
 
 import {storeToRefs} from 'pinia';
-import HeroGradient from '../assets/hero-bg.jpg';
 import MenuLayout from '../components/MenuLayout.vue';
 import NavbarButtons from '../components/NavbarButtons.vue';
 import {useStyleStore} from '@/stores/style.store';
@@ -14,7 +17,6 @@ import type {ToolCategory} from '@/tools/tools.types';
 import {useToolStore} from '@/tools/tools.store';
 import {useTracker} from '@/modules/tracker/tracker.services';
 import CollapsibleToolMenu from '@/components/CollapsibleToolMenu.vue';
-import CInputText from "@/ui/c-input-text/c-input-text.vue";
 
 const themeVars = useThemeVars();
 const styleStore = useStyleStore();
@@ -38,7 +40,7 @@ const tools = computed<ToolCategory[]>(() => [
 <template>
   <MenuLayout class="menu-layout" :class="{ isSmallScreen: styleStore.isSmallScreen }">
     <template #sider>
-      <div flex flex-col>
+      <div flex flex-col relative h-100vh>
 
         <RouterLink to="/" class="hero-wrapper">
           <div class="gradient" h-120px/>
@@ -47,45 +49,20 @@ const tools = computed<ToolCategory[]>(() => [
               <!--            IT - TOOLS-->
             </div>
             <div class="divider"/>
-            <div class="subtitle">
-              {{ $t('home.subtitle') }}
-            </div>
           </div>
         </RouterLink>
 
-        <div class="sider-content">
+        <div class="sider-content  h-[calc(100vh-120px)]">
           <div v-if="styleStore.isSmallScreen" flex flex-col items-center>
-            <locale-selector w="90%"/>
-
-            <div flex justify-center>
+            <locale-selector my="12px" w="90%"/>
+            <div flex justify-center absolute bottom-0>
               <NavbarButtons/>
             </div>
           </div>
 
           <CollapsibleToolMenu :tools-by-category="tools"/>
 
-          <div class="footer">
-            <div>
-              IT-Tools
-
-              <c-link target="_blank" rel="noopener" :href="`https://github.com/couriourc/`">
-                v{{ version }}
-              </c-link>
-
-              <template v-if="commitSha && commitSha.length > 0">
-                -
-                <c-link target="_blank" rel="noopener" type="primary" :href="`https://github.com/couriourc`">
-                  {{ commitSha }}
-                </c-link>
-              </template>
-            </div>
-            <div>
-              © {{ new Date().getFullYear() }}
-              <c-link target="_blank" rel="noopener" href="https://github.com/couriourc">
-                Copy from Corentin Thomasset
-              </c-link>
-            </div>
-          </div>
+          <div class="footer"></div>
         </div>
       </div>
     </template>
@@ -130,20 +107,6 @@ const tools = computed<ToolCategory[]>(() => [
           <locale-selector v-if="!styleStore.isSmallScreen"/>
           <NavbarButtons v-if="!styleStore.isSmallScreen"/>
 
-          <c-tooltip position="bottom" :tooltip="$t('home.support')">
-<!--            <c-button-->
-<!--                round-->
-<!--                href="https://www.buymeacoffee.com/couriouc"-->
-<!--                rel="noopener"-->
-<!--                target="_blank"-->
-<!--                class="support-button"-->
-<!--                :bordered="false"-->
-<!--            >-->
-<!--&lt;!&ndash;              {{ $t('home.buyMeACoffee') }}&ndash;&gt;-->
-<!--              <NIcon v-if="!styleStore.isSmallScreen" :component="Heart" ml-2/>-->
-<!--            </c-button>-->
-          </c-tooltip>
-
         </div>
 
       </div>
@@ -153,17 +116,6 @@ const tools = computed<ToolCategory[]>(() => [
 </template>
 
 <style lang="less" scoped>
-// ::v-deep(.n-layout-scroll-container) {
-//     @percent: 4%;
-//     @position: 25px;
-//     @size: 50px;
-//     @color: #eeeeee25;
-//     background-image: radial-gradient(@color @percent, transparent @percent),
-//         radial-gradient(@color @percent, transparent @percent);
-//     background-position: 0 0, @position @position;
-//     background-size: @size @size;
-// }
-
 .support-button {
   background: rgb(37, 99, 108);
   background: linear-gradient(48deg, rgba(37, 99, 108, 1) 0%, rgba(59, 149, 111, 1) 60%, rgba(20, 160, 88, 1) 100%);
